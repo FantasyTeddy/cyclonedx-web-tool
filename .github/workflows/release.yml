@@ -35,8 +35,8 @@ jobs:
     outputs:
       release-version: ${{ steps.package_release.outputs.version }}
     steps:
-      - uses: actions/checkout@v4.2.2
-      - uses: actions/setup-dotnet@v4.3.1
+      - uses: actions/checkout@v6.0.3
+      - uses: actions/setup-dotnet@v5.3.0
         with:
           dotnet-version: '10.0'
 
@@ -45,7 +45,7 @@ jobs:
         id: package_release
         run: |
           VERSION=`cat semver.txt`
-          echo "##[set-output name=version;]$VERSION"
+          echo "{version}={$VERSION}" >> $GITHUB_OUTPUT
           dotnet publish --configuration Release /p:Version=$VERSION --output ./gh-pages src/CycloneDX.WebTool/CycloneDX.WebTool.csproj
           cd gh-pages/wwwroot
           zip -r ../../CycloneDX.WebTool.zip ./
@@ -107,22 +107,22 @@ jobs:
 
     timeout-minutes: 5
     steps:
-      - uses: actions/checkout@v4.2.2
+      - uses: actions/checkout@v6.0.3
 
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
+        uses: docker/setup-qemu-action@v4.1.0
 
       - name: Login to DockerHub
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4.2.0
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4.1.0
 
       - name: Build image and push
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7.2.0
         with:
           platforms: linux/amd64,linux/arm64
           push: true
