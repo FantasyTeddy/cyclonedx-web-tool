@@ -7,8 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CycloneDX.Utils" Version="11.0.0" />
-    <PackageReference Include="CycloneDX.Spdx.Interop" Version="11.0.0" />
+    <PackageReference Include="CycloneDX.Utils" Version="12.1.1" />
+    <PackageReference Include="CycloneDX.Spdx.Interop" Version="12.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="10.0.9" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="10.0.9" PrivateAssets="all" />
   </ItemGroup>
