@@ -72,8 +72,8 @@
 </form>
 
 @code {
-    private List<byte[]> _inputFileContents;
-    private List<string> _userInputFilenames;
+    private List<byte[]>? _inputFileContents;
+    private List<string>? _userInputFilenames;
     private string _inputFormat = "autodetect";
     private string _outputFormat = "json";
     private string _outputVersion = "v1_7";
@@ -108,19 +108,25 @@
 
     private async Task MergeBOM()
     {
+        if (_userInputFilenames is null || _inputFileContents is null)
+        {
+            await Alert("Invalid state. Filename or file content cannot be null.");
+            return;
+        }
+
         if (!Enum.TryParse(_outputVersion, out SpecificationVersion specificationVersion))
         {
             await Alert("Looks like you've hit a bug. This shouldn't happen, but there has been a problem reading the schema version.");
             return;
         }
 
-        Models.Bom mergedBom = null;
+        Models.Bom? mergedBom = null;
         for (var i = 0; i < _inputFileContents.Count; i++)
         {
             var fileContents = _inputFileContents[i];
             var filename = _userInputFilenames[i];
-            Models.Bom currentBom = null;
-            
+            Models.Bom? currentBom = null;
+
             if (_inputFormat == "json" || _inputFormat == "autodetect" && filename.EndsWith(".json"))
             {
                 try
@@ -174,7 +180,13 @@
         }
 
         byte[] output;
-        
+
+        if (mergedBom is null)
+        {
+            await Alert("Invalid state. Merged BOM cannot be null.");
+            return;
+        }
+
         mergedBom.SpecVersion = specificationVersion;
 
         if (_outputFormat == "json")

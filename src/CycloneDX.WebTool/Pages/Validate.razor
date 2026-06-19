@@ -62,8 +62,8 @@
 <p>@_validationMessage</p>
 
 @code {
-    private string _inputFileContents;
-    private string _userInputFilename;
+    private string? _inputFileContents;
+    private string? _userInputFilename;
     private string _inputFormat = "autodetect";
     private string _inputVersion = "v1_7";
     private string _validationMessage = "";
@@ -92,6 +92,12 @@
 
     private async Task ValidateBOM()
     {
+        if (_userInputFilename is null || _inputFileContents is null)
+        {
+            await Alert("Invalid state. Filename or file content cannot be null.");
+            return;
+        }
+
         if (!Enum.TryParse(_inputVersion, out SpecificationVersion specificationVersion))
         {
             await Alert("Looks like you've hit a bug. This shouldn't happen, but there has been a problem reading the schema version.");

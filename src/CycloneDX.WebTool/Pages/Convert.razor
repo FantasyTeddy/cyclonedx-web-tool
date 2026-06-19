@@ -75,8 +75,8 @@
 </form>
 
 @code {
-    private byte[] _inputFileContents;
-    private string _userInputFilename;
+    private byte[]? _inputFileContents;
+    private string? _userInputFilename;
     private string _inputFormat = "autodetect";
     private string _outputFormat = "json";
     private string _outputVersion = "v1_7";
@@ -106,6 +106,12 @@
 
     private async Task ConvertBOM()
     {
+        if (_userInputFilename is null || _inputFileContents is null)
+        {
+            await Alert("Invalid state. Filename or file content cannot be null.");
+            return;
+        }
+
         if (!Enum.TryParse(_outputVersion, out SpecificationVersion specificationVersion))
         {
             await Alert("Looks like you've hit a bug. This shouldn't happen, but there has been a problem reading the schema version.");
