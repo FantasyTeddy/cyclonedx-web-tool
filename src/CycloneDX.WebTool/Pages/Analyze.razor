@@ -1,0 +1,225 @@
+@* This file is part of CycloneDX Web Tool *@
+@* *@
+@* Licensed under the Apache License, Version 2.0 (the “License”); *@
+@* you may not use this file except in compliance with the License. *@
+@* You may obtain a copy of the License at *@
+@* *@
+@* http://www.apache.org/licenses/LICENSE-2.0 *@
+@* *@
+@* Unless required by applicable law or agreed to in writing, software *@
+@* distributed under the License is distributed on an “AS IS” BASIS, *@
+@* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. *@
+@* See the License for the specific language governing permissions and *@
+@* limitations under the License. *@
+@* *@
+@* SPDX-License-Identifier: Apache-2.0 *@
+@* Copyright (c) OWASP Foundation. All Rights Reserved. *@
+
+@page "/analyze"
+@using System.IO
+@using System.Text
+@using Microsoft.AspNetCore.Components.Forms
+@using CycloneDX.Models
+@using CycloneDX.Spdx.Interop
+
+@inject IJSRuntime _jsRuntime;
+
+<h1>Analyze</h1>
+
+<p>Analyze a BOM file</p>
+
+<form>
+    <label>
+        Input File
+        <InputFile id="inputFile" OnChange="@LoadInputFile"></InputFile>
+    </label>
+    
+    <label>
+        Input Format
+        <select id="inputFormat" @bind="_inputFormat">
+            <option value="autodetect" selected="selected">Autodetect</option>
+            <option value="json">JSON</option>
+            <option value="xml">XML</option>
+            <option value="bin">Protobuf</option>
+            <option value="spdxjson">SPDX JSON</option>
+        </select>
+    </label>
+
+    <label>
+        Multiple Component Versions
+        <InputCheckbox id="multipleComponentVersions" @bind-Value="_multipleComponentVersions" />
+    </label>
+    
+    <button id="analyze" type="button" @onclick="@AnalyzeBOM" hidden="@(_inputFileContents == null)">Analyze</button>
+</form>
+
+@if (_analysisResult is not null)
+{
+    <hr />
+
+    <h2>Analysis Result</h2>
+
+    <ul>
+        <li><strong>Name:</strong> @_analysisResult.Name</li>
+        <li><strong>Version:</strong> @_analysisResult.Version</li>
+        @if (!string.IsNullOrEmpty(_analysisResult.BomSerialNumber))
+        {
+            <li><strong>BOM Serial Number:</strong> @_analysisResult.BomSerialNumber</li>
+        }
+        @if (_analysisResult.BomVersion.HasValue)
+        {
+            <li><strong>BOM Version:</strong> @_analysisResult.BomVersion.Value</li>
+        }
+        @if (_analysisResult.Timestamp.HasValue)
+        {
+            <li><strong>Timestamp:</strong> @_analysisResult.Timestamp.Value</li>
+        }
+    </ul>
+
+    @if (_analysisResult.MultipleComponentVersions is not null)
+    {
+        <h4>Components with multiple versions</h4>
+
+        @if (_analysisResult.MultipleComponentVersions.Count == 0)
+        {
+            <p>None</p>
+        }
+        else
+        {
+            <ul>
+                @foreach (var componentEntry in _analysisResult.MultipleComponentVersions)
+                {
+                    <li>
+                        <strong>@componentEntry.Key</strong>
+                        <ul>
+                            @foreach (var component in componentEntry.Value)
+                            {
+                                <li>@component.Version</li>
+                            }
+                        </ul>
+                    </li>
+                }
+            </ul>
+        }
+    }
+}
+
+@code {
+    private byte[] _inputFileContents;
+    private string _userInputFilename;
+    private string _inputFormat = "autodetect";
+    private bool _multipleComponentVersions = true;
+    private AnalysisResult _analysisResult;
+
+    private async Task Alert(string message)
+    {
+        await _jsRuntime.InvokeVoidAsync("alert", message);
+    }
+
+    private async Task LoadInputFile(InputFileChangeEventArgs e)
+    {
+        if (e.FileCount == 1)
+        {
+            await using (var ms = new MemoryStream())
+            {
+                await e.File.OpenReadStream(102400000).CopyToAsync(ms);
+                _inputFileContents = ms.ToArray();
+            }
+            _userInputFilename = e.File.Name;
+        }
+        else
+        {
+            _inputFileContents = null;
+            _userInputFilename = null;
+        }
+    }
+
+    private async Task AnalyzeBOM()
+    {
+        if (_userInputFilename is null || _inputFileContents is null)
+        {
+            await Alert("Invalid state. Filename or file content cannot be null.");
+            return;
+        }
+
+        Models.Bom bom;
+        if (_inputFormat == "spdxjson" || _inputFormat == "autodetect" && _userInputFilename.EndsWith(".spdx.json"))
+        {
+            try
+            {
+                var spdxDoc = CycloneDX.Spdx.Serialization.JsonSerializer.Deserialize(Encoding.UTF8.GetString(_inputFileContents));
+                bom = spdxDoc.ToCycloneDX();
+            }
+            catch (Exception e)
+            {
+                await Alert("Error deserializing BOM: " + e.Message);
+                return;
+            }
+        }
+        else if (_inputFormat == "json" || _inputFormat == "autodetect" && _userInputFilename.EndsWith(".json"))
+        {
+            try
+            {
+                bom = Json.Serializer.Deserialize(Encoding.UTF8.GetString(_inputFileContents));
+            }
+            catch (Exception e)
+            {
+                await Alert("Error deserializing BOM: " + e.Message);
+                return;
+            }
+        }
+        else if (_inputFormat == "xml" || _inputFormat == "autodetect" && _userInputFilename.EndsWith(".xml"))
+        {
+            try
+            {
+                bom = Xml.Serializer.Deserialize(Encoding.UTF8.GetString(_inputFileContents));
+            }
+            catch (Exception e)
+            {
+                await Alert("Error deserializing BOM: " + e.Message);
+                return;
+            }
+        }
+        else if (_inputFormat == "bin" || _inputFormat == "autodetect" && _userInputFilename.EndsWith(".bin"))
+        {
+            try
+            {
+                bom = Protobuf.Serializer.Deserialize(_inputFileContents);
+            }
+            catch (Exception e)
+            {
+                await Alert("Error deserializing BOM: " + e.Message);
+                return;
+            }
+        }
+        else
+        {
+            await Alert("Unable to auto-detect input format. Please specify the format.");
+            return;
+        }
+
+        _analysisResult = new AnalysisResult
+        {
+            Name = bom.Metadata.Component.Name,
+            Version = bom.Metadata.Component.Version,
+            BomSerialNumber = bom.SerialNumber,
+            BomVersion = bom.Version,
+            Timestamp = bom.Metadata.Timestamp
+        };
+
+        if (_multipleComponentVersions)
+        {
+            _analysisResult.MultipleComponentVersions = CycloneDXUtils.MultipleComponentVersions(bom);
+        }
+    }
+
+    private class AnalysisResult
+    {
+        public required string Name { get; init; }
+        public required string Version { get; init; }
+        public string BomSerialNumber { get; init; }
+        public int? BomVersion { get; init; }
+        public DateTime? Timestamp { get; init; }
+        public Dictionary<string, List<Component>> MultipleComponentVersions { get; set; }
+    }
+}
