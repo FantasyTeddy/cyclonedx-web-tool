@@ -1,5 +1,5 @@
 self.assetsManifest = {
-  "version": "pAnboQpV",
+  "version": "HAjjZokm",
   "assets": [
     {
       "hash": "sha256-5xpa8QAY16coXkaPO/yqWGK0KBGKrKWgqoLaq62Sud4=",
@@ -22,8 +22,8 @@ self.assetsManifest = {
       "url": "_framework/CycloneDX.Utils.bwkhb44pdr.wasm"
     },
     {
-      "hash": "sha256-aJBbS+cvpFRyaYhrBQFNL6/wtit4ajHaV+o1SK53hiM=",
-      "url": "_framework/CycloneDX.WebTool.s3e4g0m0zk.wasm"
+      "hash": "sha256-sVHZaGAUy187qxD5wKqgJDFsUSFNEhhQSuKwR+mu4lw=",
+      "url": "_framework/CycloneDX.WebTool.hgm0gci0sx.wasm"
     },
     {
       "hash": "sha256-pmjwN1oCPs5KMzcSwYzBGg7Pvcdv1TAodTMMUOQZBJ0=",
@@ -830,8 +830,8 @@ self.assetsManifest = {
       "url": "_framework/blazor.webassembly.958z1vx7fr.js"
     },
     {
-      "hash": "sha256-Jmy3YA9XnYqvRkLsQ6ywxuejoFmOKMZ+B2R1JpLKHpA=",
-      "url": "_framework/dotnet.6hzhu6dh5o.js"
+      "hash": "sha256-9xvD/1WMhT2PXhvuCCAR/ZvrcIpstUOhKVwLxb5Abww=",
+      "url": "_framework/dotnet.hij9tzr74j.js"
     },
     {
       "hash": "sha256-kkp5wX0htwkBcZt5WmEiKmhBqjqdCJtGc+koldfyoDQ=",
@@ -886,7 +886,7 @@ self.assetsManifest = {
       "url": "favicon.ico"
     },
     {
-      "hash": "sha256-UgKfiucnsu9eIzY0CxyKL5KmgdewCZc1/x4aB0hqH6s=",
+      "hash": "sha256-GvuG2m8gixyzQZ6UYZNifrh7sNU+wR3bX2vCmtqjSa4=",
       "url": "index.html"
     },
     {
