@@ -1,49 +1,28 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">CycloneDX Web Tool</a>
-        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-    </div>
-</div>
+<div class="nav-inner">
+    <a href="" class="nav-brand">
+        <img src="cyclonedx-logo.svg" alt="CycloneDX Logo" height="24" />
+        <span class="nav-brand-sep">/</span>
+        <span class="nav-brand-tool">Web Tool</span>
+    </a>
 
-<div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
-    <nav class="nav flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="oi oi-home" aria-hidden="true"></span> Home
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="convert">
-                <span class="oi oi-transfer" aria-hidden="true"></span> Convert
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="validate">
-                <span class="oi oi-check" aria-hidden="true"></span> Validate
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="merge">
-                <span class="oi oi-fullscreen-exit" aria-hidden="true"></span> Merge
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" target="_blank" href="https://github.com/CycloneDX/cyclonedx-web-tool/">
-                <span class="oi oi-info" aria-hidden="true"></span> More Information
-            </NavLink>
-        </div>
+    <nav class="@NavLinksClass">
+        <NavLink class="nav-link" href="convert"><span class="oi oi-transfer" aria-hidden="true"></span> Convert</NavLink>
+        <NavLink class="nav-link" href="validate"><span class="oi oi-check" aria-hidden="true"></span> Validate</NavLink>
+        <NavLink class="nav-link" href="merge"><span class="oi oi-fullscreen-exit" aria-hidden="true"></span> Merge</NavLink>
     </nav>
+
+    <button class="nav-toggle" title="Navigation menu" @onclick="ToggleMenu">
+        <span class="oi oi-menu" aria-hidden="true"></span>
+    </button>
 </div>
 
 @code {
-    private bool collapseNavMenu = true;
+    private bool collapseMenu = true;
 
-    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+    private string NavLinksClass => collapseMenu ? "nav-links" : "nav-links open";
 
-    private void ToggleNavMenu()
+    private void ToggleMenu()
     {
-        collapseNavMenu = !collapseNavMenu;
+        collapseMenu = !collapseMenu;
     }
 }

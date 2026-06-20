@@ -1,0 +1,18 @@
+
+.validation-errors {
+    list-style: none;
+    padding: 0;
+    margin: 0.5rem 0 0;
+    font-size: 0.82rem;
+}
+
+    .validation-errors li {
+        padding: 0.2rem 0;
+        opacity: 0.9;
+    }
+
+        .validation-errors li + li {
+            border-top: 1px solid rgba(220, 38, 38, 0.12);
+            padding-top: 0.25rem;
+            margin-top: 0.2rem;
+        }

@@ -1,0 +1,209 @@
+/* Hero */
+.home-hero {
+    margin-bottom: 3rem;
+    padding-bottom: 2.75rem;
+    border-bottom: 1px solid var(--cdx-border);
+    text-align: center;
+}
+
+    .home-hero h1 {
+        font-size: 2.25rem;
+        font-weight: 800;
+        line-height: 1.2;
+        margin-bottom: 0.75rem;
+    }
+
+    .home-hero p {
+        color: var(--cdx-text-muted);
+        font-size: 1rem;
+        max-width: 560px;
+        line-height: 1.6;
+        margin: 0 auto;
+    }
+
+.hero-privacy {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    margin-top: 1.25rem !important;
+    font-size: 0.85rem !important;
+    font-weight: 600;
+    color: #15803d !important;
+}
+
+    .hero-privacy .oi {
+        flex-shrink: 0;
+    }
+
+/* Features */
+.feature-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+    margin-bottom: 3rem;
+}
+
+@media (max-width: 640px) {
+    .feature-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.feature-card {
+    background: linear-gradient(160deg, var(--cdx-blue-100) 0%, var(--cdx-blue-50) 100%);
+    border: 1px solid var(--cdx-blue-300);
+    border-radius: 12px;
+    padding: 1.875rem 1.625rem 1.75rem;
+    position: relative;
+    transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+    text-decoration: none !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    color: inherit;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+
+a.feature-card:hover {
+    border-color: var(--cdx-blue-500);
+    box-shadow: 0 8px 24px rgba(59, 130, 246, 0.2);
+    transform: translateY(-2px);
+    text-decoration: none;
+    color: inherit;
+}
+
+.feature-card-icon {
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, var(--cdx-blue-500), var(--cdx-blue-700));
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.125rem;
+    color: #ffffff;
+    box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
+}
+
+.feature-card h3 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--cdx-text);
+}
+
+.feature-card p {
+    font-size: 0.825rem;
+    color: var(--cdx-text-muted);
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* Formats */
+.home-formats {
+    margin-bottom: 3.5rem;
+    text-align: center;
+}
+
+.home-formats-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--cdx-text-muted);
+    margin-bottom: 0.75rem;
+}
+
+.format-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: center;
+}
+
+.format-tag {
+    font-size: 0.8rem;
+    font-weight: 500;
+    font-family: 'SF Mono', 'Cascadia Code', Consolas, monospace;
+    color: var(--cdx-blue-700);
+    background: var(--cdx-blue-50);
+    border: 1px solid var(--cdx-blue-100);
+    border-radius: 999px;
+    padding: 0.25rem 0.875rem;
+}
+
+/* About */
+.home-about {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    margin-bottom: 2.5rem;
+    padding-top: 2.75rem;
+    border-top: 1px solid var(--cdx-border);
+}
+
+@media (max-width: 520px) {
+    .home-about {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+}
+
+.home-about-card h3 {
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+    color: var(--cdx-text-muted);
+}
+
+.home-about-card p {
+    font-size: 0.875rem;
+    color: var(--cdx-slate-700);
+    line-height: 1.6;
+    margin-bottom: 0.625rem;
+}
+
+.home-about-card a {
+    font-size: 0.825rem;
+    font-weight: 500;
+}
+
+/* Meta */
+.home-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    max-width: fit-content;
+    margin: 0 auto;
+    padding: 0.75rem 1.25rem;
+    background: var(--cdx-blue-50);
+    border: 1px solid var(--cdx-blue-100);
+    border-radius: 10px;
+}
+
+    .home-meta .oi {
+        color: var(--cdx-primary);
+        flex-shrink: 0;
+    }
+
+    .home-meta p {
+        margin: 0;
+        font-size: 0.85rem;
+        color: var(--cdx-slate-700);
+        line-height: 1.5;
+        text-align: left;
+    }
+
+    .home-meta strong {
+        font-weight: 600;
+        color: var(--cdx-text);
+    }
+
+@media (max-width: 420px) {
+    .home-meta {
+        max-width: none;
+    }
+}

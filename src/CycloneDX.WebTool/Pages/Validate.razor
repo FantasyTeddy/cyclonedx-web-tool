@@ -25,56 +25,91 @@
 
 @inject IJSRuntime _jsRuntime;
 
-<h1>Validate</h1>
+<div class="tool-header">
+    <h1>Validate</h1>
+    <p>Check whether a CycloneDX BOM conforms to the selected specification version schema.</p>
+</div>
 
-<form>
-    <label>
-        File
-        <InputFile id="inputFile" OnChange="@LoadInputFile"></InputFile>
-    </label>
-    
-    <label>
-        Format
-        <select id="inputFormat" @bind="_inputFormat">
-            <option value="autodetect" selected="selected">Autodetect</option>
-            <option value="json">JSON</option>
-            <option value="xml">XML</option>
-        </select>
-    </label>
-    
-    <label>
-        Version
-        <select id="inputVersion" @bind="_inputVersion">
-            <option value="v1_7" selected="selected">v1.7</option>
-            <option value="v1_6">v1.6</option>
-            <option value="v1_5">v1.5</option>
-            <option value="v1_4">v1.4</option>
-            <option value="v1_3">v1.3</option>
-            <option value="v1_2">v1.2</option>
-            <option value="v1_1">v1.1</option>
-            <option value="v1_0">v1.0</option>
-        </select>
-    </label>
-    
-    <button id="Validate" type="button" @onclick="@ValidateBOM" hidden="@(_inputFileContents == null)">Validate</button>
-</form>
+<div class="tool-card">
+    <form>
+        <div class="mb-3">
+            <label class="form-label" for="inputFile">BOM File</label>
+            <InputFile id="inputFile" class="form-control" OnChange="@LoadInputFile" />
+        </div>
 
-<p>@_validationMessage</p>
+        <div class="form-row mb-4">
+            <div>
+                <label class="form-label" for="inputFormat">Format</label>
+                <select id="inputFormat" class="form-select" @bind="_inputFormat">
+                    <option value="autodetect">Autodetect</option>
+                    <option value="json">JSON</option>
+                    <option value="xml">XML</option>
+                </select>
+            </div>
+            <div>
+                <label class="form-label" for="inputVersion">Specification Version</label>
+                <select id="inputVersion" class="form-select" @bind="_inputVersion">
+                    <option value="v1_7">v1.7</option>
+                    <option value="v1_6">v1.6</option>
+                    <option value="v1_5">v1.5</option>
+                    <option value="v1_4">v1.4</option>
+                    <option value="v1_3">v1.3</option>
+                    <option value="v1_2">v1.2</option>
+                    <option value="v1_1">v1.1</option>
+                    <option value="v1_0">v1.0</option>
+                </select>
+            </div>
+        </div>
+
+        <button id="validate" type="button" class="btn btn-primary" @onclick="@ValidateBOM" hidden="@(_inputFileContents == null)">
+            Validate
+        </button>
+    </form>
+
+    @if (_statusMessage != null)
+    {
+        <div class="status-alert @_statusClass">
+            <div>
+                <div>@_statusMessage</div>
+                @if (_validationErrors.Count > 0)
+                {
+                    <ul class="validation-errors">
+                        @foreach (var msg in _validationErrors)
+                        {
+                            <li>@msg</li>
+                        }
+                    </ul>
+                }
+            </div>
+        </div>
+    }
+</div>
 
 @code {
     private string? _inputFileContents;
     private string? _userInputFilename;
     private string _inputFormat = "autodetect";
     private string _inputVersion = "v1_7";
-    private string _validationMessage = "";
+    private string? _statusMessage;
+    private string _statusClass = "status-error";
+    private List<string> _validationErrors = new();
 
-    private async Task Alert(string message)
+    private void ShowError(string message)
     {
-        await _jsRuntime.InvokeVoidAsync("alert", message);
+        _statusMessage = message;
+        _statusClass = "status-error";
+    }
+
+    private void ShowSuccess(string message)
+    {
+        _statusMessage = message;
+        _statusClass = "status-success";
     }
 
     private async Task LoadInputFile(InputFileChangeEventArgs e)
     {
+        _statusMessage = null;
+        _validationErrors.Clear();
         if (e.FileCount == 1)
         {
             using (var sr = new StreamReader(e.File.OpenReadStream(102400000)))
@@ -90,17 +125,20 @@
         }
     }
 
-    private async Task ValidateBOM()
+    private void ValidateBOM()
     {
+        _statusMessage = null;
+        _validationErrors.Clear();
+
         if (_userInputFilename is null || _inputFileContents is null)
         {
-            await Alert("Invalid state. Filename or file content cannot be null.");
+            ShowError("Invalid state. Filename or file content cannot be null.");
             return;
         }
 
         if (!Enum.TryParse(_inputVersion, out SpecificationVersion specificationVersion))
         {
-            await Alert("Looks like you've hit a bug. This shouldn't happen, but there has been a problem reading the schema version.");
+            ShowError("Looks like you've hit a bug — there has been a problem reading the schema version.");
             return;
         }
 
@@ -114,7 +152,7 @@
             }
             catch (Exception e)
             {
-                await Alert("Error validating BOM: " + e.Message);
+                ShowError("Error validating BOM: " + e.Message);
                 return;
             }
         }
@@ -126,30 +164,26 @@
             }
             catch (Exception e)
             {
-                await Alert("Error deserializing BOM: " + e.Message);
+                ShowError("Error validating BOM: " + e.Message);
                 return;
             }
         }
         else
         {
-            await Alert("Unable to auto-detect input format. Please specify the format.");
+            ShowError("Unable to auto-detect input format. Please specify the format explicitly.");
             return;
         }
 
+        var versionLabel = _inputVersion.Replace('_', '.');
+
         if (result.Valid)
         {
-            _validationMessage = "";
-            await Alert($"The file is a valid {_inputVersion.Replace('_', '.')} BOM.");
+            ShowSuccess($"Valid — this file is a conformant {versionLabel} BOM.");
         }
         else
         {
-            var sb = new StringBuilder();
-            foreach (var message in result.Messages)
-            {
-                sb.AppendLine(message);
-            }
-            _validationMessage = sb.ToString();
-            await Alert($"The file is not a valid {_inputVersion.Replace('_', '.')} BOM.");
+            ShowError($"Invalid — this file does not conform to the {versionLabel} schema:");
+            _validationErrors = result.Messages?.ToList() ?? new List<string>();
         }
     }
 }

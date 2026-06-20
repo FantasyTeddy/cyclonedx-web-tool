@@ -1,68 +1,118 @@
-.navbar-toggler {
-    background-color: rgba(255, 255, 255, 0.1);
+/* === Top navigation bar === */
+.nav-inner {
+    display: flex;
+    align-items: center;
+    height: 58px;
+    padding: 0 1.5rem;
+    gap: 1.5rem;
 }
 
-.top-row {
-    height: 3.5rem;
-    background-color: rgba(0,0,0,0.4);
+/* Brand */
+.nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    text-decoration: none !important;
+    flex-shrink: 0;
 }
 
-.navbar-brand {
-    font-size: 1.1rem;
+.nav-brand:hover {
+    text-decoration: none !important;
+    opacity: 0.9;
 }
 
-.oi {
-    width: 2rem;
-    font-size: 1.1rem;
-    vertical-align: text-top;
-    top: -2px;
+.nav-brand-sep {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.2);
+    font-weight: 300;
 }
 
-.nav-item {
-    font-size: 0.9rem;
-    padding-bottom: 0.5rem;
+.nav-brand-tool {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.5);
 }
 
-    .nav-item:first-of-type {
-        padding-top: 1rem;
-    }
-
-    .nav-item:last-of-type {
-        padding-bottom: 1rem;
-    }
-
-    .nav-item ::deep a {
-        color: #d7d7d7;
-        border-radius: 4px;
-        height: 3rem;
-        display: flex;
-        align-items: center;
-        line-height: 3rem;
-    }
-
-.nav-item ::deep a.active {
-    background-color: rgba(255,255,255,0.37);
-    color: white;
+/* Desktop nav links */
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-left: auto;
 }
 
-.nav-item ::deep a:hover {
-    background-color: rgba(255,255,255,0.1);
-    color: white;
+::deep .nav-link {
+    font: 500 0.82rem ui-monospace, 'Cascadia Code', Consolas, monospace;
+    color: rgba(255, 255, 255, 0.5);
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+    text-decoration: none;
+    letter-spacing: 0.02em;
+    transition: color 0.15s, background 0.15s;
 }
 
-@media (min-width: 641px) {
-    .navbar-toggler {
+::deep .nav-link:hover {
+    color: rgba(255, 255, 255, 0.9);
+    background: rgba(255, 255, 255, 0.06);
+    text-decoration: none;
+}
+
+::deep .nav-link.active {
+    color: #ffffff;
+    background: rgba(59, 130, 246, 0.15);
+}
+
+/* Mobile toggle */
+.nav-toggle {
+    display: none;
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.5);
+    padding: 0.4rem;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-left: auto;
+    line-height: 1;
+}
+
+.nav-toggle:hover {
+    background: rgba(255, 255, 255, 0.07);
+    color: #ffffff;
+}
+
+@media (max-width: 600px) {
+    .nav-links {
         display: none;
     }
 
-    .collapse {
-        /* Never collapse the sidebar for wide screens */
-        display: block;
+    .nav-links.open {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: 58px;
+        left: 0;
+        right: 0;
+        padding: 0.5rem 1rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.07);
+        background-color: var(--cdx-slate-900);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        z-index: 1;
     }
 
-    .nav-scrollable {
-        /* Allow sidebar to scroll for tall menus */
-        height: calc(100vh - 3.5rem);
-        overflow-y: auto;
+    ::deep .nav-links.open .nav-link {
+        font-size: 0.875rem;
+        padding: 0.625rem 0.75rem;
+        border-radius: 7px;
+    }
+
+    ::deep .nav-links.open .nav-link.active {
+        color: #93c5fd;
+        background: transparent;
+    }
+
+    .nav-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 }

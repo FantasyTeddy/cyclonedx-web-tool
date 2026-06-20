@@ -1,4 +1,4 @@
-﻿@* This file is part of CycloneDX Web Tool *@
+@* This file is part of CycloneDX Web Tool *@
 @* *@
 @* Licensed under the Apache License, Version 2.0 (the “License”); *@
 @* you may not use this file except in compliance with the License. *@
@@ -18,14 +18,65 @@
 @page "/"
 @page "/home"
 
-<h1>CycloneDX Web Tool</h1>
+<div class="home-hero">
+    <h1>CycloneDX Web Tool</h1>
+    <p>A browser-based tool for working with Software Bill of Materials (SBOM) files in the CycloneDX format. Convert, validate, and merge BOMs in your browser.</p>
+    <p class="hero-privacy">
+        <span class="oi oi-lock-locked" aria-hidden="true"></span>
+        100% client-side &mdash; your files never leave your browser
+    </p>
+</div>
 
-<p>A web based tool for working with CycloneDX BOMs.</p>
+<div class="feature-grid">
+    <a href="convert" class="feature-card">
+        <div class="feature-card-icon">
+            <span class="oi oi-transfer" aria-hidden="true"></span>
+        </div>
+        <h3>Convert</h3>
+        <p>Transform BOMs between JSON, XML, Protobuf, and SPDX JSON. Downgrade to any spec version.</p>
+    </a>
 
-<p>All submitted data is processed client side in your browser. No data is transmitted elsewhere.</p>
+    <a href="validate" class="feature-card">
+        <div class="feature-card-icon">
+            <span class="oi oi-check" aria-hidden="true"></span>
+        </div>
+        <h3>Validate</h3>
+        <p>Check that a CycloneDX BOM file conforms to a specific specification version schema.</p>
+    </a>
 
-<p>This is a progressive web app. And supports running offline. CTRL+F5 should force a reload to make sure you are
-    running the latest version.</p>
+    <a href="merge" class="feature-card">
+        <div class="feature-card-icon">
+            <span class="oi oi-fullscreen-exit" aria-hidden="true"></span>
+        </div>
+        <h3>Merge</h3>
+        <p>Combine multiple CycloneDX BOM files into a single unified BOM using a flat merge.</p>
+    </a>
+</div>
 
-<p>Source code is available at the <a href="https://github.com/CycloneDX/cyclonedx-web-tool/">CycloneDX Web Tool GitHub page</a>,
-and is <a href="https://github.com/CycloneDX/cyclonedx-web-tool/blob/main/LICENSE">Apache 2.0</a> licensed.</p> 
+<div class="home-formats">
+    <p class="home-formats-label">Supported formats</p>
+    <div class="format-tags">
+        <span class="format-tag">CycloneDX JSON</span>
+        <span class="format-tag">CycloneDX XML</span>
+        <span class="format-tag">Protobuf</span>
+        <span class="format-tag">SPDX JSON</span>
+    </div>
+</div>
+
+<div class="home-about">
+    <div class="home-about-card">
+        <h3>What is CycloneDX?</h3>
+        <p>CycloneDX is a lightweight SBOM standard for application security and software supply chain analysis, maintained by the OWASP Foundation.</p>
+        <a href="https://cyclonedx.org" target="_blank" rel="noopener noreferrer">cyclonedx.org &rarr;</a>
+    </div>
+    <div class="home-about-card">
+        <h3>Free and open source</h3>
+        <p>Built and maintained on GitHub, released under the <a href="https://github.com/CycloneDX/cyclonedx-web-tool/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">Apache 2.0</a> license. Issues and contributions are welcome.</p>
+        <a href="https://github.com/CycloneDX/cyclonedx-web-tool/" target="_blank" rel="noopener noreferrer">View on GitHub &rarr;</a>
+    </div>
+</div>
+
+<div class="home-meta">
+    <span class="oi oi-data-transfer-download" aria-hidden="true"></span>
+    <p>Installs as a <strong>Progressive Web App</strong> and works offline once loaded. Press <code>Ctrl+F5</code> to pick up updates.</p>
+</div>
