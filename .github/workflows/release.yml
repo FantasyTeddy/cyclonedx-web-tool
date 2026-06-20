@@ -29,7 +29,12 @@ jobs:
   release:
     name: Release
     permissions:
-      contents: write  # for creating GH releases and uploading assets to it
+      contents: write
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
     outputs:
@@ -82,19 +87,24 @@ jobs:
           asset_path: CycloneDX.WebTool.tar.gz
           asset_name: CycloneDX.WebTool.${{ steps.package_release.outputs.version }}.tar.gz
           asset_content_type: application/gzip
-      
-      - name: Update GitHub pages
-        run: |
-          git fetch origin gh-pages:gh-pages
-          git config --local user.email "$(git show --format="%aN" | head -n 1)"
-          git config --local user.name  "$(git show --format="%aE" | head -n 1)"
-          git add .
-          git stash
-          git checkout gh-pages
-          cp -rv ./gh-pages/wwwroot/* ./docs
-          git add docs
-          git commit -m "Update GitHub pages" || true
-          git push https://${{ github.actor }}:${{ github.token }}@github.com/${{ github.repository }}.git HEAD:gh-pages
+
+      - name: Rewrite base href
+        uses: SteveSandersonMS/ghaction-rewrite-base-href@v1.1.0
+        with:
+          html_path: ./gh-pages/wwwroot/index.html
+          base_href: /cyclonedx-web-tool/
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5.0.0
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v4.0.0
+        with:
+          path: ./gh-pages/wwwroot
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4.0.5
 
   docker:
     name: docker
